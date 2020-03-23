@@ -1,8 +1,9 @@
 %global py_setup_args config_fc --fcompiler=gnu95 --noarch
+%bcond_without python2
 
 Name: scipy
 Version: 1.2.2
-Release: 1
+Release: 2
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: BSD, MIT, Boost and Public Domain
 URL: https://www.scipy.org
@@ -130,5 +131,8 @@ env FFLAGS="$RPM_OPT_FLAGS -fPIC" \
 %endif
 
 %changelog
-* Mon Nov 4 2019 openEuler Buildteam <buildteam@openeuler.org> - version-release
+* Mon Mar 23 2020 openEuler Buildteam <buildteam@openeuler.org> - 1.2.2-2
+- Add macros of python2
+
+* Mon Nov 4 2019 openEuler Buildteam <buildteam@openeuler.org> - 1.2.2-1
 - Package init
