@@ -3,7 +3,7 @@
 
 Name: scipy
 Version: 1.2.2
-Release: 2
+Release: 3
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: BSD, MIT, Boost and Public Domain
 URL: https://www.scipy.org
