@@ -1,24 +1,15 @@
 %global py_setup_args config_fc --fcompiler=gnu95 --noarch
-%bcond_without python2
-
+%global debug_package %{nil}
 Name: scipy
 Version: 1.2.2
-Release: 2
+Release: 3
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: BSD, MIT, Boost and Public Domain
 URL: https://www.scipy.org
 Source0: https://github.com/scipy/scipy/releases/download/v%{version}/scipy-%{version}.tar.gz
 
 BuildRequires: python3-devel python3-numpy >= 1.8.2 python3-numpy-f2py
-#BuildRequires: python3-pytest
-%if %{with python2}
-BuildRequires: python2-devel python2-numpy >= 1.8.2 python2-numpy-f2py
-#BuildRequires: python2-pytest
-%endif 
 BuildRequires: gcc-c++ openblas-devel gcc-gfortran
-#BuildRequires: fftw-devel blas-devel lapack-devel 
-
-
 
 %description
 SciPy (pronounced "Sigh Pie") is open-source software for mathematics, science, and engineering. 
@@ -38,16 +29,6 @@ Requires: python3 python3-numpy
 
 %description -n python3-scipy
 python3 package for scipy
-
-%if %{with python2}
-%package -n python2-scipy
-Summary: python2 package for scipy
-Requires: python2 python2-numpy
-
-%description -n python2-scipy
-python2 package for scipy
-%endif
-
 
 %prep
 %autosetup -n %{name}-%{version} -p1 -Sgit
@@ -81,13 +62,6 @@ env FFLAGS="$RPM_OPT_FLAGS -fPIC"\
     %py3_build
 popd
 
-%if %{with python2} 
-env FFLAGS="$RPM_OPT_FLAGS -fPIC"\
-    OPENBLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} LAPACK=%{_libdir} \
-    %py2_build
-%endif
-
-
 %install
 export CFLAGS="$RPM_OPT_FLAGS -lm"
 export LDFLAGS="$RPM_LD_FLAGS -Wall -shared"
@@ -98,39 +72,15 @@ env FFLAGS="$RPM_OPT_FLAGS -fPIC" \
     %py3_install
 popd
 
-%if %{with python2}
-env FFLAGS="$RPM_OPT_FLAGS -fPIC" \
-    OPENBLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} LAPACK=%{_libdir} \
-    %py2_install
-%endif
-
-
-#%check
-#pushd %{buildroot}/%{python3_sitearch}
-#py.test-%{python3_version} --timeout=300 -k "not test_denormals" scipy || :
-#popd
-
-#%if %{with python2}
-#pushd %{buildroot}/%{python2_sitearch}
-#py.test-%{python2_version} --timeout=300 -k "not test_denormals" scipy || :
-#popd
-#%endif
-
-
 %files -n python3-scipy
 %license LICENSE.txt
 %{python3_sitearch}/scipy
 %{python3_sitearch}/*.egg-info
 
-
-%if %{with python2}
-%files -n python2-scipy
-%license LICENSE.txt
-%{python2_sitearch}/scipy
-%{python2_sitearch}/*.egg-info
-%endif
-
 %changelog
+* Tue Oct 27 2020 huanghaitao <huanghaitao8@openeuler.org> - 1.2.2-3
+- Disable python2 module
+
 * Mon Mar 23 2020 openEuler Buildteam <buildteam@openeuler.org> - 1.2.2-2
 - Add macros of python2
 
