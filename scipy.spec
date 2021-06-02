@@ -2,14 +2,14 @@
 %global debug_package %{nil}
 Name: scipy
 Version: 1.2.2
-Release: 3
+Release: 4
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: BSD, MIT, Boost and Public Domain
 URL: https://www.scipy.org
 Source0: https://github.com/scipy/scipy/releases/download/v%{version}/scipy-%{version}.tar.gz
 
 BuildRequires: python3-devel python3-numpy >= 1.8.2 python3-numpy-f2py
-BuildRequires: gcc-c++ openblas-devel gcc-gfortran
+BuildRequires: gcc-c++ openblas-devel gcc-gfortran git
 
 %description
 SciPy (pronounced "Sigh Pie") is open-source software for mathematics, science, and engineering. 
@@ -78,6 +78,9 @@ popd
 %{python3_sitearch}/*.egg-info
 
 %changelog
+* Mon May 31 2021 huanghaitao <huanghaitao8@huawei.com> - 1.2.2-4
+- Completing build dependencies to fix git commands missing error
+
 * Tue Oct 27 2020 huanghaitao <huanghaitao8@openeuler.org> - 1.2.2-3
 - Disable python2 module
 
