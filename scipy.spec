@@ -2,9 +2,9 @@
 %global debug_package %{nil}
 Name: scipy
 Version: 1.2.2
-Release: 4
+Release: 5
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
-License: BSD, MIT, Boost and Public Domain
+License: Qhull and Apache-2.0
 URL: https://www.scipy.org
 Source0: https://github.com/scipy/scipy/releases/download/v%{version}/scipy-%{version}.tar.gz
 
@@ -57,7 +57,7 @@ cp -a . %{py3dir}
 export CFLAGS="$RPM_OPT_FLAGS -lm"
 export LDFLAGS="$RPM_LD_FLAGS -Wall -shared"
 pushd %{py3dir}
-env FFLAGS="$RPM_OPT_FLAGS -fPIC"\
+env FFLAGS="$RPM_OPT_FLAGS -fPIC -w -fallow-argument-mismatch -O2"\
     OPENBLAS=%{_libdir} FFTW=%{_libdir} BLAS=%{_libdir} LAPACK=%{_libdir} \
     %py3_build
 popd
@@ -78,6 +78,9 @@ popd
 %{python3_sitearch}/*.egg-info
 
 %changelog
+* Sun 01 Aug 2021 sunguoshuai <sunguoshuai@huawei.com> - 1.2.2-5
+- Fix build error with gcc 10
+
 * Mon May 31 2021 huanghaitao <huanghaitao8@huawei.com> - 1.2.2-4
 - Completing build dependencies to fix git commands missing error
 
