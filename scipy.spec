@@ -2,7 +2,7 @@
 %global debug_package %{nil}
 Name: scipy
 Version: 1.2.2
-Release: 6
+Release: 7
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: Qhull and Apache-2.0
 URL: https://www.scipy.org
@@ -72,12 +72,17 @@ env FFLAGS="$RPM_OPT_FLAGS -fPIC" \
     %py3_install
 popd
 
+find %{buildroot} -type f -name '*.so' -exec strip '{}' ';'
+
 %files -n python3-scipy
 %license LICENSE.txt
 %{python3_sitearch}/scipy
 %{python3_sitearch}/*.egg-info
 
 %changelog
+* Sat Sep 4 2021 zhangtao <zhangtao221@huawei.com> - 1.2.2-7
+- Strip Dynamic library
+
 * Mon Aug 02 2021 chenyanpanHW <chenyanpan@huawei.com> - 1.2.2-6
 - DESC: delete -Sgit from %autosetup, and delete BuildRequires git
 
