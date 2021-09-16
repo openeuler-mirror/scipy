@@ -2,14 +2,14 @@
 %global debug_package %{nil}
 Name: scipy
 Version: 1.2.2
-Release: 7
+Release: 8
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: Qhull and Apache-2.0
 URL: https://www.scipy.org
 Source0: https://github.com/scipy/scipy/releases/download/v%{version}/scipy-%{version}.tar.gz
 
 BuildRequires: python3-devel python3-numpy >= 1.8.2 python3-numpy-f2py
-BuildRequires: gcc-c++ openblas-devel gcc-gfortran
+BuildRequires: gcc-c++ openblas-devel gcc-gfortran chrpath
 
 %description
 SciPy (pronounced "Sigh Pie") is open-source software for mathematics, science, and engineering. 
@@ -74,19 +74,39 @@ popd
 
 find %{buildroot} -type f -name '*.so' -exec strip '{}' ';'
 
+cd  $RPM_BUILD_ROOT/usr
+file `find -type f`| grep -w ELF | awk -F":" '{print $1}' | for i in `xargs`
+do
+  chrpath -d $i
+done
+cd -
+mkdir -p  $RPM_BUILD_ROOT/etc/ld.so.conf.d
+echo "%{_bindir}/%{name}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
+echo "%{_libdir}/%{name}" >> $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+
 %files -n python3-scipy
 %license LICENSE.txt
 %{python3_sitearch}/scipy
 %{python3_sitearch}/*.egg-info
+%config(noreplace) /etc/ld.so.conf.d/*
 
 %changelog
+* Thu Sep 16 2021 chenchen <chen_aka_jan@163.com> - 1.2.2-8
+- del rpath for some binaries and bin
+
 * Sat Sep 4 2021 zhangtao <zhangtao221@huawei.com> - 1.2.2-7
 - Strip Dynamic library
 
 * Mon Aug 02 2021 chenyanpanHW <chenyanpan@huawei.com> - 1.2.2-6
 - DESC: delete -Sgit from %autosetup, and delete BuildRequires git
 
-* Sun 01 Aug 2021 sunguoshuai <sunguoshuai@huawei.com> - 1.2.2-5
+* Sun Aug 01 2021 sunguoshuai <sunguoshuai@huawei.com> - 1.2.2-5
 - Fix build error with gcc 10
 
 * Mon May 31 2021 huanghaitao <huanghaitao8@huawei.com> - 1.2.2-4
