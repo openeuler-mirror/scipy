@@ -1,15 +1,16 @@
 %global py_setup_args config_fc --fcompiler=gnu95 --noarch
 %global debug_package %{nil}
 Name: scipy
-Version: 1.2.2
-Release: 7
+Version: 1.6.2
+Release: 1
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: Qhull and Apache-2.0
 URL: https://www.scipy.org
 Source0: https://github.com/scipy/scipy/releases/download/v%{version}/scipy-%{version}.tar.gz
 
 BuildRequires: python3-devel python3-numpy >= 1.8.2 python3-numpy-f2py
-BuildRequires: gcc-c++ openblas-devel gcc-gfortran git chrpath
+BuildRequires: gcc-c++ openblas-devel gcc-gfortran chrpath
+BuildRequires: pybind11-devel python3-pybind11 python3-Cython 
 
 %description
 SciPy (pronounced "Sigh Pie") is open-source software for mathematics, science, and engineering. 
@@ -31,7 +32,7 @@ Requires: python3 python3-numpy
 python3 package for scipy
 
 %prep
-%autosetup -n %{name}-%{version} -p1 -Sgit
+%autosetup -n %{name}-%{version} -p1
 
 cat > site.cfg << EOF
 [amd]
@@ -97,13 +98,19 @@ echo "%{_libdir}/%{name}" >> $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.c
 %config(noreplace) /etc/ld.so.conf.d/*
 
 %changelog
-* Thu Sep 09 2021 chenchen <chen_aka_jan@163.com> - 1.2.2-7
-- del rpath for some binaries and bin 
+* Fri Dec 24 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1.6.2-1
+- upgrade to 1.6.2 
 
-* Sat Sep 4 2021 zhangtao <zhangtao221@huawei.com> - 1.2.2-6
+* Thu Sep 16 2021 chenchen <chen_aka_jan@163.com> - 1.2.2-8
+- del rpath for some binaries and bin
+
+* Sat Sep 4 2021 zhangtao <zhangtao221@huawei.com> - 1.2.2-7
 - Strip Dynamic library
 
-* Sun 01 Aug 2021 sunguoshuai <sunguoshuai@huawei.com> - 1.2.2-5
+* Mon Aug 02 2021 chenyanpanHW <chenyanpan@huawei.com> - 1.2.2-6
+- DESC: delete -Sgit from %autosetup, and delete BuildRequires git
+
+* Sun Aug 01 2021 sunguoshuai <sunguoshuai@huawei.com> - 1.2.2-5
 - Fix build error with gcc 10
 
 * Mon May 31 2021 huanghaitao <huanghaitao8@huawei.com> - 1.2.2-4
