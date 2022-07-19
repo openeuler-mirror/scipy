@@ -1,6 +1,7 @@
-%global _empty_manifest_terminate_build 0
+%global py_setup_args config_fc --fcompiler=gnu95 --noarch
+%global debug_package %{nil}
 Name: scipy
-Version: 1.8.0
+Version: 1.6.2
 Release: 1
 Summary: A Python-based ecosystem of open-source software for mathematics, science, and engineering
 License: Qhull and Apache-2.0
@@ -9,18 +10,18 @@ Source0: https://github.com/scipy/scipy/releases/download/v%{version}/scipy-%{ve
 
 BuildRequires: python3-devel python3-numpy >= 1.8.2 python3-numpy-f2py
 BuildRequires: gcc-c++ openblas-devel gcc-gfortran chrpath
-BuildRequires: pybind11-devel python3-pybind11 python3-Cython
+BuildRequires: pybind11-devel python3-pybind11 python3-Cython 
 
 %description
-SciPy (pronounced "Sigh Pie") is open-source software for mathematics, science, and engineering.
-It includes modules for statistics, optimization, integration, linear algebra, Fourier transforms,
+SciPy (pronounced "Sigh Pie") is open-source software for mathematics, science, and engineering. 
+It includes modules for statistics, optimization, integration, linear algebra, Fourier transforms, 
 signal and image processing, ODE solvers, and more.
 
-SciPy depends on NumPy, which provides convenient and fast N-dimensional array manipulation.
-SciPy is built to work with NumPy arrays, and provides many user-friendly and efficient numerical routines
-such as routines for numerical integration and optimization.
-Together, they run on all popular operating systems, are quick to install, and are free of charge.
-NumPy and SciPy are easy to use, but powerful enough to be depended upon by some of the world's leading scientists and engineers.
+SciPy depends on NumPy, which provides convenient and fast N-dimensional array manipulation. 
+SciPy is built to work with NumPy arrays, and provides many user-friendly and efficient numerical routines 
+such as routines for numerical integration and optimization. 
+Together, they run on all popular operating systems, are quick to install, and are free of charge. 
+NumPy and SciPy are easy to use, but powerful enough to be depended upon by some of the world's leading scientists and engineers. 
 If you need to manipulate numbers on a computer and display or publish the results, give SciPy a try!
 
 %package -n python3-scipy
@@ -38,7 +39,7 @@ cat > site.cfg << EOF
 library_dirs = %{_libdir}
 include_dirs = /usr/include/suitesparse
 amd_libs = amd
-
+ 
 [umfpack]
 library_dirs = %{_libdir}
 include_dirs = /usr/include/suitesparse
@@ -55,7 +56,6 @@ cp -a . %{py3dir}
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -lm"
-export SCIPY_USE_PYTHRAN=0
 export LDFLAGS="$RPM_LD_FLAGS -Wall -shared"
 pushd %{py3dir}
 env FFLAGS="$RPM_OPT_FLAGS -fPIC -w -fallow-argument-mismatch -O2"\
@@ -93,15 +93,13 @@ echo "%{_libdir}/%{name}" >> $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.c
 
 %files -n python3-scipy
 %license LICENSE.txt
-%{python3_sitelib}/*.egg-info
+%{python3_sitearch}/scipy
+%{python3_sitearch}/*.egg-info
 %config(noreplace) /etc/ld.so.conf.d/*
 
 %changelog
-* Tue Jul 12 2022 renliang16 <renliang@uniontech.com> - 1.8.0-1
-- Upgrade package scipy to version 1.8.0
-
 * Mon Dec 13 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1.6.2-1
-- upgrade to 1.6.2
+- upgrade to 1.6.2 
 
 * Thu Sep 16 2021 chenchen <chen_aka_jan@163.com> - 1.2.2-8
 - del rpath for some binaries and bin
